@@ -3,12 +3,14 @@ html, body {
     padding: 0;
 }
 
-.box {
+.letter {
     width: 75px;
     height: 75px;
-    background: Lightgrey;
+    background: #f8f0c6;
     z-index: 500;
     display: inline-block;
+    border-right: 3px solid #f6e8b1;
+    border-bottom: 3px solid #f6e8b1;
 }
 
 /* .box p {

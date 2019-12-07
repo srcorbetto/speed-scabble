@@ -148,10 +148,10 @@ $('.goal').droppable({
 
 game.letters.forEach(letterTile => {
     for (i = 0; i < letterTile.quantity; i++) {
-        $('body').append(`<div class="box"><p>${letterTile.letter}<p></div>`)
+        $('body').append(`<div class="letter"><p>${letterTile.letter}<p></div>`)
     }
 })
 
-$('.box').draggable({
+$('.letter').draggable({
     snap: true
 });
