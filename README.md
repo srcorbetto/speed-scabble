@@ -1,0 +1,2 @@
+# speed-scabble
+Speed Scrabble!
