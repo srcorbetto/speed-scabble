@@ -4,22 +4,26 @@ html, body {
 }
 
 .letter {
-    width: 75px;
-    height: 75px;
+    width: 50px;
+    height: 50px;
     background: #f8f0c6;
     z-index: 500;
     display: inline-block;
-    border-right: 3px solid #f6e8b1;
-    border-bottom: 3px solid #f6e8b1;
+    border-right: 2px solid #f6e8b1;
+    border-bottom: 2px solid #f6e8b1;
+    border-radius: 5px;
 }
 
-/* .box p {
-    width: 75px;
-    height: 75px;
-    background: Lightgrey;
-    z-index: 500;
-    display: inline-block;
-} */
+.letter p {
+    font-size: 20px;
+    margin: 0;
+    padding: 0;
+    position: absolute;
+    width: 22px;
+    height: 22px;
+    top: 14px;
+    left: 20px;
+}
 
 .goal {
     width: 500px;
