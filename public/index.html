@@ -19,6 +19,16 @@
     </div>
 
     <div class="draw"></div>
+
+    <form action="/action_page.php">
+        First name:<br>
+        <input type="text" name="firstname" value="Mickey">
+        <br>
+        Last name:<br>
+        <input type="text" name="lastname" value="Mouse">
+        <br><br>
+        <input type="submit" value="Submit">
+    </form>
     
    <!-- jQuery -->
    <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
@@ -31,6 +41,10 @@
    <!-- Socket.io client -->
    <script src="/socket.io/socket.io.js"></script>
 
+   <!-- Socket listeners -->
+   <script src="/assets/js/sockets.js"></script>
+
+   <!-- Game logic -->
    <script src="/assets/js/script.js"></script>
 </body>
 </html>
