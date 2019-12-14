@@ -1,3 +1,8 @@
+const socket = io();
+socket.on('draw', msg => {
+    console.log(msg);
+})
+
 let letters = [
     {
         letter: '?',
@@ -426,10 +431,10 @@ const drawLetter = () => {
         playerLetters.push(letters[randNum]);
         letters.splice(randNum, 1);
     }
-    playerLetters.forEach(letterTile => {
-        $('body').append(`<div class="letter">${letterTile.letter}</div>`)
-    });
+    const lastLetterInArray = playerLetters[playerLetters.length - 1].letter;
+    $('body').append(`<div class="letter">${lastLetterInArray}</div>`);
     makeDraggable();
+    socket.emit('draw', 'draw');
 }
 
 const placeLetter = () => {
@@ -440,18 +445,16 @@ const makeDraggable = () => {
     $('.letter').draggable({
         snap: '.grid',
         stop: (event, ui) => {
-            // console.log(event.target)
-            // console.log(ui)
         }
     });
 }
 
-for (i = 0; i < 9; i++) {
+for (i = 0; i < 14; i++) {
     $('.hr-container').append(`<hr class="line grid">`);
     $('.vr-container').append(`<div class="line-vert grid"></div>`);
 }
 
-$('.goal').droppable({
+$('.container-wrapper').droppable({
     accept: '.letter',
     drop: (e, ui) => {
         console.log(e.target);
@@ -460,7 +463,7 @@ $('.goal').droppable({
 });
 
 getPlayerLetters(7);
-$('.goal').on('click', () => {
-    // getPlayerLetters(1);
+$('.draw').on('click', () => {
+    drawLetter();
 })
 
