@@ -421,38 +421,46 @@ const getPlayerLetters = numberOfLettersNeeded => {
 }
 
 const drawLetter = () => {
-    
+    for (i = 0; i < 1; i++) {
+        const randNum = Math.floor(Math.random() * (letters.length));
+        playerLetters.push(letters[randNum]);
+        letters.splice(randNum, 1);
+    }
+    playerLetters.forEach(letterTile => {
+        $('body').append(`<div class="letter">${letterTile.letter}</div>`)
+    });
+    makeDraggable();
+}
+
+const placeLetter = () => {
+
 }
 
 const makeDraggable = () => {
     $('.letter').draggable({
         snap: '.grid',
         stop: (event, ui) => {
-            console.log(event.target)
-            console.log(ui)
+            // console.log(event.target)
+            // console.log(ui)
         }
     });
 }
 
-$('.goal').droppable({
-    accept: '.letter',
-    drop: () => {
-        console.log('POOP')
-    }
-});
-
-// letters.forEach(letterTile => {
-//     $('body').append(`<div class="letter"><p>${letterTile.letter}<p></div>`)
-// })
-
 for (i = 0; i < 9; i++) {
-    // $('.goal').append(`<div class="checkerboard"></div>`)
     $('.hr-container').append(`<hr class="line grid">`);
     $('.vr-container').append(`<div class="line-vert grid"></div>`);
 }
 
+$('.goal').droppable({
+    accept: '.letter',
+    drop: (e, ui) => {
+        console.log(e.target);
+        console.log(ui.draggable[0]);
+    }
+});
+
 getPlayerLetters(7);
 $('.goal').on('click', () => {
-    getPlayerLetters(1);
+    // getPlayerLetters(1);
 })
 
