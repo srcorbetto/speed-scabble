@@ -33,3 +33,27 @@ html, body {
     right: 0;
     bottom: 0;
 }
+
+.hr-container, .vr-container {
+    width: 500px;
+    height: 500px;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+.line {
+    outline: 1px dotted rgba(188, 188, 188, 0.356);
+    border: none;
+    margin: 50px 0 0 0;
+    padding: 0;
+}
+
+.line-vert {
+    outline: 1px dotted rgba(188, 188, 188, 0.356);
+    height: 500px;
+    width: 0px;
+    margin: 0 0 0 50px;
+    padding: 0;
+    display: inline-block;
+}
