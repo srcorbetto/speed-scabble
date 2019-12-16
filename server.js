@@ -21,10 +21,16 @@ app.get('/letters', (req, res) => {
     res.send(letters);
 });
 
+app.get('/room/:room', (req, res) => {
+    const room = req.params.room;
+    console.log(room)
+    res.send(`${room}`);
+});
+
 app.post('/letters-update', (req, res) => {
     letters = req.body.letters;
     res.send(letters);
-})
+});
 
 io.on('connection', socket => {
     console.log('a user connected');
@@ -34,6 +40,17 @@ io.on('connection', socket => {
     socket.on('draw', msg => {
         console.log(msg);
         io.emit('draw', msg);
+    });
+    socket.on('join room', room => {
+        socket.join(room);
+        const RoomData = {
+            allRooms: io.sockets.adapter.rooms,
+            room: room
+        };
+        io.to(room).emit('join room', RoomData);
+    });
+    socket.on('start game', () => {
+        io.emit('start game');
     });
   });
 

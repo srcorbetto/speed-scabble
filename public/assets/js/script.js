@@ -1,8 +1,30 @@
 const socket = io();
 socket.on('draw', msg => {
     console.log(msg);
+});
+socket.on('join room', roomData => {
+    const numberOfPlayersInRoom = roomData.allRooms[roomData.room].length;
+    if (numberOfPlayersInRoom === 1) {
+        console.log('You are the only one in the game');
+        player = 1;
+    } else if (numberOfPlayersInRoom === 2) {
+        console.log('You are player 2!');
+        player = 2;
+        socket.emit('start game');
+    }
+});
+socket.on('start game', data => {
+    if (player === 1) {
+        getPlayerLetters(7);
+    } else if (player === 2) {
+        // Delay draw for opponent
+        setTimeout(()=> {
+            getPlayerLetters(7);
+        }, 2000);
+    }
 })
 
+let player;
 let playerLetters = [];
 
 const getPlayerLetters = numberOfLettersNeeded => {
@@ -68,8 +90,13 @@ $('.container-wrapper').droppable({
     }
 });
 
+$('form').on('submit', e => {
+    e.preventDefault();
+    const room = $('input[name="room"]').val();
+    socket.emit('join room', room);
+});
+
 initGrid();
-getPlayerLetters(7);
 $('.draw').on('click', () => {
     drawLetter();
 })
