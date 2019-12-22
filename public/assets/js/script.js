@@ -3,32 +3,38 @@ socket.on('draw', msg => {
     console.log(msg);
 });
 socket.on('join room', roomData => {
+    room = roomData.room;
     const numberOfPlayersInRoom = roomData.allRooms[roomData.room].length;
-    if (numberOfPlayersInRoom === 1) {
-        console.log('You are the only one in the game');
-        player = 1;
-    } else if (numberOfPlayersInRoom === 2) {
-        console.log('You are player 2!');
-        player = 2;
-        socket.emit('start game');
-    }
+    console.log(roomData);
+    socket.emit('start game');
+    // if (numberOfPlayersInRoom === 1) {
+    //     console.log('You are the only one in the game');
+    //     player = 1;
+    // } else if (numberOfPlayersInRoom === 2) {
+    //     console.log('You are player 2!');
+    //     player = 2;
+    //     socket.emit('start game');
+    // }
 });
 socket.on('start game', data => {
-    if (player === 1) {
-        getPlayerLetters(7);
-    } else if (player === 2) {
-        // Delay draw for opponent
-        setTimeout(()=> {
-            getPlayerLetters(7);
-        }, 2000);
-    }
-})
+    getPlayerLetters(7);
+    // if (player === 1) {
+    //     getPlayerLetters(7);
+    // } else if (player === 2) {
+    //     // Delay draw for opponent
+    //     setTimeout(()=> {
+    //         getPlayerLetters(7);
+    //     }, 2000);
+    // }
+});
 
 let player;
 let playerLetters = [];
+let room;
 
 const getPlayerLetters = numberOfLettersNeeded => {
-    $.get( "/letters", lettersFromServer => {
+    console.log('test');
+    $.get( `/letters/${room}`, lettersFromServer => {
         for (i = 0; i < numberOfLettersNeeded; i++) {
             const randNum = Math.floor(Math.random() * (lettersFromServer.length));
             playerLetters.push(lettersFromServer[randNum]);
@@ -90,6 +96,7 @@ $('.container-wrapper').droppable({
     }
 });
 
+// Form submit...
 $('form').on('submit', e => {
     e.preventDefault();
     const room = $('input[name="room"]').val();

@@ -5,9 +5,8 @@ const http = require('http').createServer(app);
 const io = require('socket.io')(http);
 const path = require('path');
 const port = process.env.PORT || 5000;
+const db = require('./fb-config').db;
 let letters = require('./letters').letters;
-
-console.log(letters);
 
 app.use(express.static('public'));
 app.use(bodyParser.json());
@@ -17,8 +16,9 @@ app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname + '/public/' + '/index.html'));
 });
 
-app.get('/letters', (req, res) => {
-    res.send(letters);
+app.get('/letters/:room', (req, res) => {
+    console.log(req.params.room);
+    // res.send(letters);
 });
 
 app.get('/room/:room', (req, res) => {
@@ -47,11 +47,26 @@ io.on('connection', socket => {
             allRooms: io.sockets.adapter.rooms,
             room: room
         };
-        io.to(room).emit('join room', RoomData);
+        let docRef = db.collection('room').doc(room);
+        docRef.set({
+            letters: letters
+        })
+        .then(e => {
+            // io.to(room).emit('join room', e);
+            io.to(room).emit('join room', RoomData);
+        });
     });
     socket.on('start game', () => {
         io.emit('start game');
     });
   });
+
+// let docRef = db.collection('room').doc('test');
+
+// let setAda = docRef.set({
+//     first: 'Ada',
+//     last: 'Lovelace',
+//     born: 1815
+// });
 
 http.listen(port, () => console.log(`Listening on port ${port}`));
