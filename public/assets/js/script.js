@@ -2,11 +2,15 @@ const socket = io();
 socket.on('draw', msg => {
     console.log(msg);
 });
+socket.on('connection', data => {
+    console.log('broadcast');
+});
 socket.on('join room', roomData => {
     room = roomData.room;
     const numberOfPlayersInRoom = roomData.allRooms[roomData.room].length;
     console.log(roomData);
     socket.emit('start game');
+    // socket.emit('start game');
     // if (numberOfPlayersInRoom === 1) {
     //     console.log('You are the only one in the game');
     //     player = 1;
@@ -17,8 +21,8 @@ socket.on('join room', roomData => {
     // }
 });
 socket.on('start game', data => {
-    console.log('start');
-    getPlayerLetters(7);
+    console.log(data);
+    // getPlayerLetters(7);
     // if (player === 1) {
     //     getPlayerLetters(7);
     // } else if (player === 2) {
