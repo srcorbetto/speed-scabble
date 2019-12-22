@@ -18,7 +18,18 @@ app.get('/', (req, res) => {
 
 app.get('/letters/:room', (req, res) => {
     console.log(req.params.room);
-    // res.send(letters);
+    let docRef = db.collection('room').doc(req.params.room);
+    let getDoc = docRef.get()
+    .then(doc => {
+        if (!doc.exists) {
+            console.log('No such document!');
+        } else {
+            res.send(doc.data().letters);
+        }
+    })
+    .catch(err => {
+        console.log('Error getting document', err);
+    });
 });
 
 app.get('/room/:room', (req, res) => {
@@ -27,9 +38,15 @@ app.get('/room/:room', (req, res) => {
     res.send(`${room}`);
 });
 
-app.post('/letters-update', (req, res) => {
-    letters = req.body.letters;
-    res.send(letters);
+app.post('/letters-update/:room', (req, res) => {
+    let docRef = db.collection('room').doc(req.params.room);
+    docRef.set({
+        letters: req.body.letters
+    })
+    .then(() => {
+        res.send('updated!');
+    })
+    // res.send(letters);
 });
 
 io.on('connection', socket => {
@@ -60,13 +77,5 @@ io.on('connection', socket => {
         io.emit('start game');
     });
   });
-
-// let docRef = db.collection('room').doc('test');
-
-// let setAda = docRef.set({
-//     first: 'Ada',
-//     last: 'Lovelace',
-//     born: 1815
-// });
 
 http.listen(port, () => console.log(`Listening on port ${port}`));

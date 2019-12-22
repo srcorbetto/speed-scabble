@@ -17,6 +17,7 @@ socket.on('join room', roomData => {
     // }
 });
 socket.on('start game', data => {
+    console.log('start');
     getPlayerLetters(7);
     // if (player === 1) {
     //     getPlayerLetters(7);
@@ -33,17 +34,17 @@ let playerLetters = [];
 let room;
 
 const getPlayerLetters = numberOfLettersNeeded => {
-    console.log('test');
-    $.get( `/letters/${room}`, lettersFromServer => {
+    $.get( `/letters/${room}`, lettersFromDb => {
+        console.log(lettersFromDb);
         for (i = 0; i < numberOfLettersNeeded; i++) {
-            const randNum = Math.floor(Math.random() * (lettersFromServer.length));
-            playerLetters.push(lettersFromServer[randNum]);
-            lettersFromServer.splice(randNum, 1);
-        }
-        const updatedLetters = {
-            letters: lettersFromServer
+            const randNum = Math.floor(Math.random() * (lettersFromDb.length));
+            playerLetters.push(lettersFromDb[randNum]);
+            lettersFromDb.splice(randNum, 1);
         };
-        $.post('/letters-update', updatedLetters, data => {
+        const updatedLetters = {
+            letters: lettersFromDb
+        };
+        $.post(`/letters-update/${room}`, updatedLetters, data => {
             console.log(data);
             playerLetters.forEach(letterTile => {
                 $('body').append(`<div class="letter">${letterTile.letter}</div>`)
