@@ -50,14 +50,9 @@ app.post('/letters-update/:room', (req, res) => {
 });
 
 io.on('connection', socket => {
-    socket.broadcast.emit('connection');
     console.log('a user connected');
-    socket.on('disconnect', () => {
-        letters = require('./letters').letters;
-    });
-    socket.on('draw', msg => {
-        console.log(msg);
-        io.emit('draw', msg);
+    socket.on('draw', room => {
+        socket.to(room).emit('draw');
     });
     socket.on('join room', room => {
         socket.join(room);
@@ -71,11 +66,11 @@ io.on('connection', socket => {
         })
         .then(e => {
             // io.to(room).emit('join room', e);
-            socket.to(room).emit('join room', RoomData);
+            io.to(room).emit('join room', RoomData);
         });
     });
-    socket.on('start game', () => {
-        io.emit('start game', 'info');
+    socket.on('start game', room => {
+        socket.to(room).emit('start game', 'info');
         // Need to distribute to each player only once...
     });
   });

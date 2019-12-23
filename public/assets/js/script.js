@@ -1,41 +1,31 @@
 const socket = io();
+let player;
+let playerLetters = [];
+let room;
+
 socket.on('draw', msg => {
-    console.log(msg);
-});
-socket.on('connection', data => {
-    console.log('broadcast');
+    drawLetter();
 });
 socket.on('join room', roomData => {
     room = roomData.room;
     const numberOfPlayersInRoom = roomData.allRooms[roomData.room].length;
     console.log(roomData);
-    socket.emit('start game');
-    // socket.emit('start game');
-    // if (numberOfPlayersInRoom === 1) {
-    //     console.log('You are the only one in the game');
-    //     player = 1;
-    // } else if (numberOfPlayersInRoom === 2) {
-    //     console.log('You are player 2!');
-    //     player = 2;
-    //     socket.emit('start game');
-    // }
+    if (numberOfPlayersInRoom === 1) {
+        console.log('You are the only one in the game');
+        player = 1;
+    } else if (numberOfPlayersInRoom === 2) {
+        // console.log('You are player 2!');
+        // player = 2;
+        socket.emit('start game', room);
+    }
 });
 socket.on('start game', data => {
     console.log(data);
-    // getPlayerLetters(7);
-    // if (player === 1) {
-    //     getPlayerLetters(7);
-    // } else if (player === 2) {
-    //     // Delay draw for opponent
-    //     setTimeout(()=> {
-    //         getPlayerLetters(7);
-    //     }, 2000);
-    // }
+    // history.pushState('', '', `/${room}/1`);
+    $('.get-letters').on('click', () => {
+        getPlayerLetters(7);
+    });
 });
-
-let player;
-let playerLetters = [];
-let room;
 
 const getPlayerLetters = numberOfLettersNeeded => {
     $.get( `/letters/${room}`, lettersFromDb => {
@@ -59,21 +49,19 @@ const getPlayerLetters = numberOfLettersNeeded => {
 }
 
 const drawLetter = () => {
-    $.get( "/letters", lettersFromServer => {
+    $.get( `/letters/${room}`, lettersFromDb => {
         for (i = 0; i < 1; i++) {
-            const randNum = Math.floor(Math.random() * (lettersFromServer.length));
-            playerLetters.push(lettersFromServer[randNum]);
-            lettersFromServer.splice(randNum, 1);
+            const randNum = Math.floor(Math.random() * (lettersFromDb.length));
+            playerLetters.push(lettersFromDb[randNum]);
+            lettersFromDb.splice(randNum, 1);
         }
         const updatedLetters = {
-            letters: lettersFromServer
+            letters: lettersFromDb
         };
-        $.post('/letters-update', updatedLetters, data => {
-            console.log(data);
+        $.post(`/letters-update/${room}`, updatedLetters, data => {
             const lastLetterInArray = playerLetters[playerLetters.length - 1].letter;
             $('body').append(`<div class="letter">${lastLetterInArray}</div>`);
             makeDraggable();
-            socket.emit('draw', 'draw');
         });
     });
 }
@@ -111,7 +99,8 @@ $('form').on('submit', e => {
 initGrid();
 $('.draw').on('click', () => {
     drawLetter();
-})
+    socket.emit('draw', room);
+});
 
 // TO DO:
 // =====================================================================
